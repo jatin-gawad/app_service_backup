@@ -1,0 +1,92 @@
+
+
+Automatic Backup default, we can restore it via deployment slot. 
+
+Deployment Slot Restoration:
+
+We can restore backups to a deployment slot if backups are available under the Backups blade.
+
+During restoration, we will select the source (backup time) and destination (slot or current app).
+
+If the backups are still accessible, Azure will restore the app files and optionally the app configuration to the slot.
+
+Internal Backup Storage:
+
+When we enable automatic backup but don’t configure a storage account, Azure stores the backups temporarily in its internal storage for 30 days.
+
+However, this internal storage is:
+
+Not durable: Backups may be purged if Azure needs to reclaim space.
+
+Not guaranteed: Backups may not be available for restoration after a certain period.
+
+Cost-Saving Consideration:
+
+While avoiding a storage account saves costs, it increases the risk of losing backups due to Azure’s internal storage limitations.
+
+You’re entirely dependent on Azure’s internal mechanisms, which may not meet compliance, durability, or long-term retention requirements.
+
+Key Risks Without a Storage Account
+Backup Retention:
+
+Azure’s internal storage does not provide explicit retention guarantees without a storage account.
+
+For long-term retention or disaster recovery scenarios, relying on internal backups is risky.
+
+Disaster Recovery:
+
+If a disaster impacts Azure’s internal backup system or if the WebApp is permanently deleted, internal backups may not be recoverable.
+
+Compliance:
+
+If your organization has compliance requirements (e.g., SOC2, GDPR), you may need to retain backups for a defined period (30, 60, or 90 days), which internal storage may not fulfill.
+
+====================================================================================
+Azure App Service's Automatic Backup feature provides an efficient way to safeguard your WebApp by regularly backing up its content and any linked databases. Let's delve into whether custom backups are necessary when automatic backups are already in place and the disaster recovery process.
+
+Automatic Backups in Azure App Service
+What It Does:
+
+Backs up the WebApp configuration, content, and any connected databases (if configured).
+
+Operates on a defined schedule (e.g., every hour).
+
+Stores backups in a designated Azure Storage account.
+
+Restoration in Case of Disaster:
+
+If the WebApp faces a failure or disaster, you can use these backups to restore the application.
+
+The restoration process is straightforward through the Azure Portal.
+
+Automatic backups ensure consistency since they run regularly and are managed by Azure.
+
+Where It Helps:
+
+In scenarios like accidental deletions, configuration corruption, or application failures.
+
+Recovery Point Objective (RPO) is determined by the backup frequency. For example, if backups run every hour, your RPO is one hour, meaning you may lose up to one hour of data in a disaster.
+
+Custom Backups: Are They Necessary?
+When Custom Backups Are Not Necessary:
+If automatic backups cover all your needs, including the frequency and scope (e.g., app content and databases).
+
+If the storage account used for automatic backups has proper configurations (encryption, redundancy, retention policies).
+
+When Custom Backups Might Be Necessary:
+Specific Requirements:
+
+If you need to back up to a different storage account for compliance or redundancy.
+
+If you need backups with different schedules, retention periods, or file naming conventions.
+
+Additional Redundancy:
+
+For critical applications, having an additional custom backup process ensures another layer of security.
+
+Integration with Other Systems:
+
+If you need to integrate backups with third-party systems or tools for monitoring or auditing.
+
+
+==================================================================================
