@@ -1,0 +1,103 @@
+# Azure SQL Database Backup and Recovery Guide
+
+## Overview
+This guide outlines the best practices and detailed steps for configuring backups and ensuring disaster recovery for Azure SQL Database.
+
+---
+
+## Backup Types
+
+### 1. Automated Backups
+- Azure SQL Database automatically performs:
+  - **Full Backups**: Weekly.
+  - **Differential Backups**: Every 12-24 hours.
+  - **Transaction Log Backups**: Every 5-10 minutes.
+- Retention Policy:
+  - Point-in-Time Restore (PITR): Configurable from 7 to 35 days.
+  - Long-Term Retention (LTR): Up to 10 years.
+
+### 2. Manual Backups
+- Create manual backups for critical operations:
+  1. Use the `Export` feature to save a `.bacpac` file.
+  2. Store the `.bacpac` file in Azure Blob Storage.
+
+---
+
+## Industry Best Practices
+
+### 1. Point-in-Time Restore (PITR)
+- Retention: Configure for **30 days** in production environments.
+- Use cases: Recover from accidental deletions or corruption.
+
+### 2. Differential Backups
+- Frequency: Retain the default frequency of every 12-24 hours.
+- Adjust for high transaction workloads if needed.
+
+### 3. Long-Term Retention (LTR)
+- Retention: Configure based on compliance requirements (e.g., 1 year, 5 years, or 10 years).
+- Storage: Use Geo-Redundant Storage (GRS) for additional resilience.
+
+### 4. Geo-Replication
+- Enable geo-replication for high availability.
+- Benefits: Ensures secondary replica is available in case of a regional outage.
+
+### 5. Backup Testing
+- Regularly test both PITR and LTR restores.
+- Schedule quarterly restore drills.
+
+### 6. Monitoring and Alerts
+- Use Azure Monitor to:
+  - Track backup job status.
+  - Set alerts for failures.
+
+---
+
+## Step-by-Step Procedure
+
+### Enabling and Configuring Backups
+1. **Point-in-Time Restore**:
+   - Navigate to the Azure Portal.
+   - Select the SQL Database.
+   - Go to **Settings > Backups**.
+   - Configure the retention period under PITR settings.
+
+2. **Long-Term Retention**:
+   - Navigate to **Settings > Backups** in the Azure Portal.
+   - Under LTR settings, configure:
+     - Backup frequency: Weekly/Monthly/Yearly.
+     - Retention period.
+   - Save changes.
+
+3. **Manual Backup**:
+   - Open SQL Server Management Studio (SSMS).
+   - Connect to the Azure SQL Database.
+   - Right-click the database > Tasks > Export Data-tier Application.
+   - Save the `.bacpac` file to Azure Blob Storage.
+
+### Restoring a Database
+1. **Point-in-Time Restore**:
+   - Navigate to the SQL Database.
+   - Select **Restore** from the toolbar.
+   - Choose a timestamp within the retention period.
+   - Confirm and monitor the restore process.
+
+2. **Long-Term Retention Restore**:
+   - Navigate to the LTR backups under **Manage Backups**.
+   - Select the desired backup.
+   - Click **Restore** and choose the target server.
+
+---
+
+## Recommendations
+- Configure PITR retention for 30 days.
+- Enable LTR for all production databases with retention of at least 1 year.
+- Test restores every quarter to validate backups.
+- Monitor backups with Azure Monitor and set up alerts.
+- Document all recovery procedures in a runbook for quick reference during emergencies.
+
+---
+
+## Additional Resources
+- [Azure SQL Database Documentation](https://learn.microsoft.com/en-us/azure/azure-sql/database/)
+- [Automated Backups](https://learn.microsoft.com/en-us/azure/azure-sql/database/automated-backups-overview)
+- [Long-Term Retention](https://learn.microsoft.com/en-us/azure/azure-sql/database/long-term-backup-retention-configure)
